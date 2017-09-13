@@ -24,7 +24,8 @@ public class Movement : MonoBehaviour
     //moves all the boids to new positions. 
     void MoveAllBoids()
     {
-        Vector2 V1, V2, V3 = new Vector2();
+        Vector2 V1, V2, V3, currentVelocity = new Vector2();
+        Vector3 newVector3 = Vector3.zero; 
       
 
         //need to assign boids
@@ -34,10 +35,17 @@ public class Movement : MonoBehaviour
             V1 = Rule1(boid);
             V2 = Rule2(boid);
             V3 = Rule3(boid);
+            currentVelocity = boid.GetComponent<Boid>().GetVelocity();  //get current Velocity of the current Boid. 
 
             //change velocity and position
-            boid.GetComponent<Boid>().SetVelocity(boid.GetComponent<Boid>().GetVelocity + V1 + V2 + V3); 
-            boid.transform.position = boid.transform.position + boid.GetComponent<Boid>().GetVelocity;
+
+            boid.GetComponent<Boid>().SetVelocity(Vector2Add(currentVelocity, V1, V2,V3)); //why god? 
+            currentVelocity = boid.GetComponent<Boid>().GetVelocity(); //i dont like this. 
+            newVector3.x = currentVelocity.x;
+            newVector3.y = currentVelocity.y;
+            boid.transform.position = newVector3; 
+
+
         }
     }
 
@@ -96,4 +104,16 @@ public class Movement : MonoBehaviour
 
         return ProjectedVelocity; 
     }
+
+    //**********************************************************
+    //This will add 4 vectors together and return a new vector2
+    //**********************************************************
+    private Vector2 Vector2Add(Vector2 vectorA, Vector2 vectorB, Vector2 vectorC, Vector2 vectorD)
+    {
+        Vector2 ReturnVector;
+        ReturnVector.x = vectorA.x + vectorB.x + vectorC.x + vectorD.x;
+        ReturnVector.y = vectorA.y + vectorB.y + vectorC.y + vectorD.y;
+        return ReturnVector; 
+    }
+
 }
